@@ -1,6 +1,9 @@
 ; $Id $
 name = Mustardseed Event Registration
 description = Custom functions for event registration using Ubercart and Webform
-package = Mustardseed
+package = Mustardseed Media Inc.
 version = "1.0"
 core = 6.x
+
+dependencies[] = webform
+dependencies[] = ubercart

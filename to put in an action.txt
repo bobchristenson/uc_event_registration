@@ -1,0 +1,14 @@
+
+
+//all this needs to go in an action
+
+//load webform module
+module_load_include('inc', 'webform', 'includes/webform.submissions')
+
+//get the webform submission
+$submission = webform_submission_load($sid);
+
+// change properties here;
+
+//update the webform submission
+webform_submission_update($submission);

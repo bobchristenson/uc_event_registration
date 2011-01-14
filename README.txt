@@ -6,29 +6,24 @@ into an event registration system.
 
 -- REQUIREMENTS --
 
-You must have Ubercart and Webform 3 installed along with some misc modules
-to be named later. This is also useless without the feature which goes with it.
-
+You must have Ubercart 2.x and Webform 3.4 or higher installed along with the
+ms_event_registration_feature which is included in this module
 
 -- CURRENT FEATURES --
 
 The ms_event_registration module currently does the following actions:
-- Creates default quantity and paid/unpaid fields on webform content types called 'event_form'
+-Creates 'Paid Event' Ubercart class on install
+- Creates default quantity and paid/unpaid fields on webform paid event
 - If the node type is 'paidevent' (our ubercart product class) it removes the submit button and 
 attribute displays
 - We have our own submit handler which: Gets quantity from webform, stores submission 
 id as an attribute, adds referenced item to cart, directs to checkout.
 -built in conditional action marks webform as paid upon completion of checkout.
+-built in feature moves some vars as well as webform settings
 -setup can handle checking out with multiple events at a time
 
 -- TO DO LIST --
-- On the webform we unset the payment status from display
-- We change the title of the submit button to something better
-- We validate the form using custom validation for quantity (making sure its an integer)
-- Build a feature which includes content types, product attributes, and any vars 
-we may need  (waiting on http://drupal.org/node/880770)
-- Get down to one content type (add webform directly on event node): 
-waiting on http://drupal.org/node/1008514
+Nothing!  Everything currently up to spec.  Add ideas below.
 
 
 -- FEATURE IDEAS / REQUESTS --

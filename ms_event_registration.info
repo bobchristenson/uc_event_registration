@@ -6,4 +6,4 @@ version = "1.0"
 core = 6.x
 
 dependencies[] = webform
-dependencies[] = ubercart
+dependencies[] = ca

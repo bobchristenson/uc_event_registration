@@ -71,14 +71,16 @@ function ms_event_registration_form_alter(&$form, $form_state, $form_id) {
 		if (substr($form_id, 0, 20) == 'webform_client_form_') {
 	
 			//Hide the Payment Status for everyone.  Admins can still see the result in the webform results.
-			unset($form['submitted']['payment_status']);
-
+			//breaks stuff  unset($form['submitted']['payment_status']);
+			
+			//change the submit button title
+			//this is breaking the redirect  $form['actions']['submit']['#value'] = 'Checkout';	
+			
 			// Add the submit handler after the existing Webform submit handler
 			$form['#submit'][] = 'ms_event_registration_client_submit';
-			//change the submit button title
-			$form['actions']['submit']['#value'] = 'Checkout';	
+
 			//add validation to be used on quantity field
-			$form['#validate'][] = 'ms_event_registration_validate_number';
+			//validation not working even when integer $form['#validate'][] = 'ms_event_registration_validate_number';
 
     }
 }
@@ -87,7 +89,8 @@ function ms_event_registration_form_alter(&$form, $form_state, $form_id) {
 	* Element Validator for Quantity, making sure it's a numeric entry
  	*/
 function ms_event_registration_validate_number($form_values) {
-  if ($form_values['submitted_tree']['quantity'] !== is_numeric($form_values['submitted_tree']['quantity'])) {
+  $value = $form_values['submitted_tree']['quantity'];
+  if (!is_numeric($value)) {
     form_set_error(' ', t('You have not entered a valid quantity.'));
   }
 }
@@ -102,12 +105,6 @@ function ms_event_registration_validate_number($form_values) {
 		
 		//get the quantity of registrations they want from the webform
 		$quantity = $form_state['values']['submitted_tree']['quantity'];
-		
-		//empty anything in the cart because I'm lazy
-		uc_cart_empty(uc_cart_get_id());
-		
-		//tell user we just emptied their cart and then laugh at their dismayed reaction
-		drupal_set_message('Your shopping cart has been emptied except for this event registration. Please complete this registration before adding anything else to your shopping cart.');
 		
 		//add quantity of registrations to cart based on node ref and webform quantity with sid as attribute
 			//define the attribute to modify
@@ -152,7 +149,11 @@ $actions['ms_event_registration_mark_paid'] = array(
   
 // Mark a webform as paid
 function ms_event_registration_mark_paid(&$order) {
-	$sid = $order->products[0]->data['attributes']['submission_id'];
-	$value = db_query("UPDATE {webform_submitted_data} SET data = '%s' WHERE cid = %d AND sid = %d", paid, 2, $sid);
-	return $value;
+foreach ($order->products as $theproduct) {
+	$sid = $theproduct->data['attributes']['submission_id'];
+	if($sid) {
+		$value = db_query("UPDATE {webform_submitted_data} SET data = '%s' WHERE cid = %d AND sid = %d", paid, 2, $sid);
+		return $value;
+		}
+	}
 } 

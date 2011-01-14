@@ -68,23 +68,21 @@ function ms_event_registration_form_alter(&$form, $form_state, $form_id) {
 		}
 	}
 
-	//redirect the webform submit button.
-		//Need to add an if statement once content type is decided so it doesnt affect all webforms.
-		if (substr($form_id, 0, 20) == 'webform_client_form_') {
-	
-			//Hide the Payment Status for everyone.  Admins can still see the result in the webform results.
-			//breaks stuff  unset($form['submitted']['payment_status']);
+	//make sure its our paid event node
+	if($form['#node']->type == 'paidevent') {
 			
-			//change the submit button title
-			//this is breaking the redirect  $form['actions']['submit']['#value'] = 'Checkout';	
+		if (substr($form_id, 0, 20) == 'webform_client_form_') {
+
+			//Hide the Payment Status for everyone.  Admins can still see the result in the webform results.
+			$form['submitted']['payment_status']['#access'] = FALSE;
 			
 			// Add the submit handler after the existing Webform submit handler
 			$form['#submit'][] = 'ms_event_registration_client_submit';
 
 			//add validation to be used on quantity field
-			$form['#validate'][] = 'ms_event_registration_validate_number';
-
-    }
+			$form['#validate'][] = 'ms_event_registration_validate_number';	
+		}
+	}
 }
 
 /**

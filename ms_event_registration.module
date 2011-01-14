@@ -82,7 +82,7 @@ function ms_event_registration_form_alter(&$form, $form_state, $form_id) {
 			$form['#submit'][] = 'ms_event_registration_client_submit';
 
 			//add validation to be used on quantity field
-			//validation not working even when integer $form['#validate'][] = 'ms_event_registration_validate_number';
+			$form['#validate'][] = 'ms_event_registration_validate_number';
 
     }
 }
@@ -91,9 +91,9 @@ function ms_event_registration_form_alter(&$form, $form_state, $form_id) {
 	* Element Validator for Quantity, making sure it's a numeric entry
  	*/
 function ms_event_registration_validate_number($form_values) {
-  $value = $form_values['submitted_tree']['quantity'];
+  $value = $form_values['submitted']['quantity']['#value'];
   if (!is_numeric($value)) {
-    form_set_error(' ', t('You have not entered a valid quantity.'));
+    form_set_error('', t('You have not entered a valid quantity.'));
   }
 }
 

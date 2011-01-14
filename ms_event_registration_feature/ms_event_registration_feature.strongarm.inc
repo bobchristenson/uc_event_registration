@@ -18,6 +18,7 @@ function ms_event_registration_feature_strongarm() {
   $strongarm->name = 'node_options_paidevent';
   $strongarm->value = array(
     0 => 'status',
+    1 => 'promote',
   );
 
   $export['node_options_paidevent'] = $strongarm;
@@ -25,7 +26,7 @@ function ms_event_registration_feature_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'uc_image_paidevent';
-  $strongarm->value = '';
+  $strongarm->value = 'field_image_cache';
 
   $export['uc_image_paidevent'] = $strongarm;
   $strongarm = new stdClass;

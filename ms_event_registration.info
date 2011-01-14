@@ -5,12 +5,17 @@ package = Mustardseed Media Inc.
 version = "1.0"
 core = 6.x
 
+
 dependencies[] = webform
 dependencies[] = features
 dependencies[] = ca
-dependencies[] = payment
+
+dependencies[] = uc_product
+dependencies[] = uc_payment
 dependencies[] = uc_attribute
 dependencies[] = uc_cart
 dependencies[] = uc_order
-dependencies[] = uc_product
 dependencies[] = uc_store
+
+
+dependencies[] = ms_event_registration_feature

@@ -13,7 +13,7 @@ function ms_event_registration_install() {
 /*
  * Create a signup-enabled Event content type and product class.
  */
-function ms_event_setup() {
+function ms_event_setup() {  
   // Create an event content type.
   module_load_include('admin.inc', 'uc_product');
   $form_state['values']['pcid'] = 'paidevent';

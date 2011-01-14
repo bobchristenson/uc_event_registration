@@ -1,7 +1,6 @@
 core = "6.x"
 dependencies[] = "ca"
 dependencies[] = "features"
-dependencies[] = "ms_event_registration"
 dependencies[] = "strongarm"
 dependencies[] = "uc_attribute"
 dependencies[] = "uc_cart"

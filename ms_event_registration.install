@@ -5,9 +5,14 @@
 function ms_event_registration_install() {
   // Set the weight to 100, making it heavier than most everything
   db_query("UPDATE {system} SET weight = 100 WHERE name = 'ms_event_registration'");
-  
-  //setup the content type for an event since features cant do it.
-  ms_event_setup();
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+function ms_event_registration_enable() {
+	//setup the content type for an event since features cant do it.
+	ms_event_setup();
 }
 
 /*

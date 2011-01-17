@@ -18,4 +18,4 @@ dependencies[] = uc_order
 dependencies[] = uc_store
 
 
-dependencies[] = ms_event_registration_feature
+dependencies[] = uc_event_registration_feature

@@ -1,0 +1,21 @@
+; $Id $
+name = Ubercart Event Registration
+description = Creates an event registration system using features and and a glue module.
+package = Ubercart
+version = "1.0"
+core = 6.x
+
+
+dependencies[] = webform
+dependencies[] = features
+dependencies[] = ca
+
+dependencies[] = uc_product
+dependencies[] = uc_payment
+dependencies[] = uc_attribute
+dependencies[] = uc_cart
+dependencies[] = uc_order
+dependencies[] = uc_store
+
+
+dependencies[] = ms_event_registration_feature

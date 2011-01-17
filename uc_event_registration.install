@@ -1,0 +1,38 @@
+<?php
+/**
+ * Implementation of hook_install().
+ */
+function uc_event_registration_install() {
+  // Set the weight to 100, making it heavier than most everything
+  db_query("UPDATE {system} SET weight = 100 WHERE name = 'uc_event_registration'");
+}
+
+/**
+ * Implementation of hook_enable().
+ */
+function uc_event_registration_enable() {
+	//setup the content type for an event since features cant do it.
+	uc_event_setup();
+}
+
+/*
+ * Create a signup-enabled Event content type and product class.
+ */
+function uc_event_setup() {  
+  // Create an event content type.
+  module_load_include('admin.inc', 'uc_product');
+  $form_state['values']['pcid'] = 'paidevent';
+  $form_state['values']['name'] = 'Paid Event';
+  $form_state['values']['description'] = 'Create an event which requires registration and payment to attend.';
+  global $user;
+  $temp_user = $user;
+  session_save_session(FALSE);
+  $user = user_load(1);
+  drupal_execute('uc_product_class_form', $form_state);
+  $user = $temp_user;
+  session_save_session(TRUE);
+
+  // Make the content type non-shippable.
+  variable_set('uc_product_shippable_event', 0);
+  watchdog('Mustardseed', t('Finished paid event setup.'));
+}

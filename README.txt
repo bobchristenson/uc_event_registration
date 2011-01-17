@@ -27,3 +27,5 @@ Nothing!  Everything currently up to spec.  Add ideas below.
 
 
 -- FEATURE IDEAS / REQUESTS --
+-Make this compatible with ubercart attributes and things like
+price adjustment modules. (um. yeah. that's gonna be hard.)

@@ -1,7 +1,7 @@
 ; $Id $
 name = Ubercart Event Registration
 description = Creates an event registration system using features and and a glue module.
-package = Ubercart
+package = Ubercart - extra
 version = "1.0"
 core = 6.x
 

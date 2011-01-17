@@ -1,3 +1,0 @@
-<?php
-
-include_once('ms_event_registration_feature.features.inc');

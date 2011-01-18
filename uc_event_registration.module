@@ -88,7 +88,7 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
   */
 function uc_event_registration_validate_number($form_values) {
   $value = $form_values['submitted']['quantity']['#value'];
-  if (!is_numeric($value)) {
+  if (!is_numeric($value) || ($value <= 0)) {
     form_set_error('', t('You have not entered a valid quantity.'));
   }
 }

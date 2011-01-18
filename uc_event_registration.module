@@ -5,9 +5,8 @@ require_once('uc_event_registration_ca.inc');
 
 /*
 * Implementation of hook_nodeapi
+* create default webform fields.  This array shows up backwards on a print_r..donno why.
 */
- 
- //create default webform fields.  This array shows up backwards on a print_r..donno why.
 function uc_event_registration_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
     case 'presave':
@@ -52,7 +51,6 @@ unpaid|Unpaid',
 /*
 * Implementation of hook_form_alter
 */
-
 function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
   
   //load the node
@@ -87,7 +85,7 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
 
 /**
   * Element Validator for Quantity, making sure it's a numeric entry
-   */
+  */
 function uc_event_registration_validate_number($form_values) {
   $value = $form_values['submitted']['quantity']['#value'];
   if (!is_numeric($value)) {
@@ -97,7 +95,7 @@ function uc_event_registration_validate_number($form_values) {
 
 /**
   * Submit handler for event registration webforms
-   */
+  */
   function uc_event_registration_client_submit(&$form, &$form_state) {
     
     //load the webform node

@@ -34,5 +34,4 @@ function uc_event_setup() {
 
   // Make the content type non-shippable.
   variable_set('uc_product_shippable_event', 0);
-  watchdog('Mustardseed', t('Finished paid event setup.'));
 }

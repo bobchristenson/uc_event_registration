@@ -47,13 +47,13 @@ function uc_event_registration_ca_predicate() {
       ),
     ),
     '#actions' => array(
-    	array(
-				'#name' => 'uc_event_registration_mark_paid',
-    		'#title' => t('Mark Webform as Paid after Checkout'),
-     	 '#argument_map' => array(
-      		'order' => 'order', 
-    		),
-    	),
+      array(
+        '#name' => 'uc_event_registration_mark_paid',
+        '#title' => t('Mark Webform as Paid after Checkout'),
+        '#argument_map' => array(
+          'order' => 'order', 
+        ),
+      ),
     ),
   );
   return $configurations;

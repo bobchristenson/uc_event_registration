@@ -11,8 +11,8 @@ function uc_event_registration_install() {
  * Implementation of hook_enable().
  */
 function uc_event_registration_enable() {
-	//setup the content type for an event since features cant do it.
-	uc_event_setup();
+  //setup the content type for an event since features cant do it.
+  uc_event_setup();
 }
 
 /*

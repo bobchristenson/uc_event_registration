@@ -11,7 +11,7 @@ function uc_event_registration_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
     case 'presave':
     case 'insert':
-      if ($node->nid == NULL && $node->type == 'paidevent') {
+      if (!$node->nid && $node->type == 'paidevent') {
         $node->webform['components'] = array(
           1 => array(
             'nid' => $node->nid,

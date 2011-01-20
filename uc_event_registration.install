@@ -25,7 +25,7 @@ function uc_event_setup() {
   $form_state['values']['name'] = 'Paid Event';
   $form_state['values']['description'] = 'Create an event which requires registration and payment to attend.';
   global $user;
-  $temp_user = $user;
+  $temp_user = drupal_clone($user);
   session_save_session(FALSE);
   $user = user_load(1);
   drupal_execute('uc_product_class_form', $form_state);

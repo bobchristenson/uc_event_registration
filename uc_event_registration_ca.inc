@@ -83,9 +83,9 @@ $actions['uc_event_registration_mark_paid'] = array(
   
 // Mark a webform as paid
 function uc_event_registration_mark_paid(&$order, $settings) {
-foreach ($order->products as $theproduct) {
-$sid = $theproduct->data['attributes']['submission_id'];
-$value = db_query("UPDATE {webform_submitted_data} SET data = '%s' WHERE cid = %d AND sid = %d", paid, 2, $sid);
-}
-return $value;
+  foreach ($order->products as $theproduct) {
+    $sid = $theproduct->data['attributes']['submission_id'];
+    $value = db_query("UPDATE {webform_submitted_data} SET data = '%s' WHERE cid = %d AND sid = %d", 'paid', 2, $sid);
+  }
+  return $value;
 } 

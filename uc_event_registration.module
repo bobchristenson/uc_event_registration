@@ -55,6 +55,8 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
   
   //load the node
   $node = node_load(arg(1));
+  
+  
   //Check if it's a paid event as opposed to other types of products
   if($node->type == 'paidevent') {
     //make sure its the add to cart form
@@ -68,8 +70,12 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
 
   //make sure its our paid event node
   if($form['#node']->type == 'paidevent') {
+  
       
     if (substr($form_id, 0, 20) == 'webform_client_form_') {
+    
+
+    
 
       //Hide the Payment Status for everyone.  Admins can still see the result in the webform results.
       $form['submitted']['payment_status']['#access'] = FALSE;
@@ -79,8 +85,18 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
 
       //add validation to be used on quantity field
       $form['#validate'][] = 'uc_event_registration_validate_number';  
+      
+      
+      //if the stock module is enabled and stock is zero, turn off the webform
+      if(module_exists('uc_stock')) {
+        $stock = uc_stock_level($node->model);
+        if($stock <= 0) {
+         $form['#node']->webform['status'] = 0;
+        }
+      }
     }
   }
+  
 }
 
 /**

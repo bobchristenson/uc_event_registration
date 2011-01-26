@@ -46,58 +46,46 @@ unpaid|Unpaid',
   } //endswitch 
 } //endfunction
 
- 
- 
+
 /*
 * Implementation of hook_form_alter
 */
-function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
-  
-  //load the node
-  $node = node_load(arg(1));
-  
-  
-  //Check if it's a paid event as opposed to other types of products
-  if($node->type == 'paidevent') {
-    //make sure its the add to cart form
+function uc_event_registration_form_alter(&$form, &$form_state, $form_id) {
+  //Check if it's a paid event form
+  //first check is add to cart, second is webform
+  if($form['node']['#value']->type == 'paidevent' || $form['#node']->type == 'paidevent') { 
+    //target the add to cart form
     if(strpos($form_id, 'add_to_cart_form')) {
       //remove the submit button because webform does the submitting
       unset($form['submit']);
       //remove attributes since no one should ever see them
       unset($form['attributes']);        
-    }
-  }
+    }//add to cart form
 
-  //make sure its our paid event node
-  if($form['#node']->type == 'paidevent') {
-  
-      
+    //target the included webform
     if (substr($form_id, 0, 20) == 'webform_client_form_') {
-    
-
-    
-
-      //Hide the Payment Status for everyone.  Admins can still see the result in the webform results.
-      $form['submitted']['payment_status']['#access'] = FALSE;
-      
+      //Hide the Payment Status for everyone.
+      //Admins can still see the result in the webform results.
+      $form['submitted']['payment_status']['#access'] = 0;     
       // Add the submit handler after the existing Webform submit handler
       $form['#submit'][] = 'uc_event_registration_client_submit';
-
       //add validation to be used on quantity field
-      $form['#validate'][] = 'uc_event_registration_validate_number';  
-      
+      $form['#validate'][] = 'uc_event_registration_validate_number';      
       
       //if the stock module is enabled and stock is zero, turn off the webform
       if(module_exists('uc_stock')) {
         $stock = uc_stock_level($node->model);
         if($stock <= 0) {
-         $form['#node']->webform['status'] = 0;
-        }
-      }
-    }
-  }
-  
-}
+          $form['submitted']['#access'] = 0;
+          $form['actions']['submit']['#access'] = 0;      
+          //I'd like to give a message, below, but it prints twice.  Anyone? Bueller?
+          //drupal_set_message('Sorry, this event has sold out!');
+        } //stock check
+      } //module_exists
+    }//webform_client_form
+  }//type is paidevent 
+}//form_alter
+
 
 /**
   * Element Validator for Quantity, making sure it's a numeric entry
@@ -106,8 +94,8 @@ function uc_event_registration_validate_number($form_values) {
   $value = $form_values['submitted']['quantity']['#value'];
   if (!is_numeric($value) || ($value <= 0)) {
     form_set_error('', t('You have not entered a valid quantity.'));
-  }
-}
+  }//end numeric check
+}//end validation
 
 /**
   * Submit handler for event registration webforms
@@ -134,6 +122,4 @@ function uc_event_registration_validate_number($form_values) {
     //redirect to checkout after submission
     $form_state['redirect'] = 'cart/checkout';
 
-    
-    
-}
+}//end submit function

@@ -74,7 +74,7 @@ function uc_event_registration_form_alter(&$form, &$form_state, $form_id) {
       
       //if the stock module is enabled and stock is zero, turn off the webform
       if(module_exists('uc_stock')) {
-        $stock = uc_stock_level($node->model);
+        $stock = uc_stock_level($form['#node']->model);
         if($stock <= 0) {
           $form['submitted']['#access'] = 0;
           $form['actions']['submit']['#access'] = 0;      
@@ -93,33 +93,40 @@ function uc_event_registration_form_alter(&$form, &$form_state, $form_id) {
 function uc_event_registration_validate_number($form_values) {
   $value = $form_values['submitted']['quantity']['#value'];
   if (!is_numeric($value) || ($value <= 0)) {
-    form_set_error('', t('You have not entered a valid quantity.'));
+    form_set_error('quantity', t('You have not entered a valid quantity.'));
   }//end numeric check
+  if(module_exists('uc_stock')) {
+    $stock = uc_stock_level($form_values['#node']->model);
+    if($stock < $value) {
+      form_set_error('quantity', t('Sorry, but your quantity chosen exceeds the remaining number of tickets.  There are currently @stock tickets remaining. Please try purchasing fewer.', array('@stock' => $stock)), $reset = FALSE);
+    }//stock_level
+  }//module_exists
 }//end validation
 
 /**
   * Submit handler for event registration webforms
   */
-  function uc_event_registration_client_submit(&$form, &$form_state) {
+function uc_event_registration_client_submit(&$form, &$form_state) {
     
-    //load the webform node
-    $node = node_load(arg(1));
+  //load the webform node
+  $node = node_load(arg(1));
     
-    //get the quantity of registrations they want from the webform
-    $quantity = $form_state['values']['submitted_tree']['quantity'];
+  //get the quantity of registrations they want from the webform
+  $quantity = $form_state['values']['submitted_tree']['quantity'];
     
-    //add quantity of registrations to cart based on node ref and webform quantity with sid as attribute
-      //define the attribute to modify
-      $att_title = 'submission_id';
-      //use SID as the attribute so we can grab it later and mark webform as complete
-      $att_name = $form_state['values']['details']['sid'];
-      //create attributes array
-      $attributes = array( 'attributes' => array( $att_title => $att_name  ) );
-    
-    //add it to the cart
-    uc_cart_add_item($node->nid, $quantity, $attributes);
-    
-    //redirect to checkout after submission
-    $form_state['redirect'] = 'cart/checkout';
-
+  //add quantity of registrations to cart based on
+  //node ref and webform quantity with sid as attribute
+  
+  //define the attribute to modify
+  $att_title = 'submission_id';
+  //use SID as the attribute so we can grab it later and mark webform as complete
+  $att_name = $form_state['values']['details']['sid'];
+  //create attributes array
+  $attributes = array( 'attributes' => array( $att_title => $att_name  ) );
+     
+  //add it to the cart
+  uc_cart_add_item($node->nid, $quantity, $attributes);
+  
+  //redirect to checkout
+  $form_state['redirect'] = 'cart/checkout';
 }//end submit function

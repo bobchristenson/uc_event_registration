@@ -72,10 +72,13 @@ function uc_event_registration_form_alter(&$form, &$form_state, $form_id) {
       //add validation to be used on quantity field
       $form['#validate'][] = 'uc_event_registration_validate_number';      
       
+
+            
+
       //if the stock module is enabled and stock is zero, turn off the webform
       if(module_exists('uc_stock')) {
         $stock = uc_stock_level($form['#node']->model);
-        if($stock <= 0) {
+        if($stock !== FALSE && $stock <= 0) {
           $form['submitted']['#access'] = 0;
           $form['actions']['submit']['#access'] = 0;      
           //I'd like to give a message, below, but it prints twice.  Anyone? Bueller?
@@ -97,8 +100,8 @@ function uc_event_registration_validate_number($form_values) {
   }//end numeric check
   if(module_exists('uc_stock')) {
     $stock = uc_stock_level($form_values['#node']->model);
-    if($stock < $value) {
-      form_set_error('quantity', t('Sorry, but your quantity chosen exceeds the remaining number of tickets.  There are currently @stock tickets remaining. Please try purchasing fewer.', array('@stock' => $stock)), $reset = FALSE);
+    if($stock !== FALSE && $stock < $value) {
+      form_set_error('quantity', t('Sorry, but your quantity chosen exceeds the remaining number of tickets.  There are currently @stock tickets remaining. Please try purchasing fewer.', array('@stock' => $stock)), $reset = FALSE);      
     }//stock_level
   }//module_exists
 }//end validation

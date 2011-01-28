@@ -81,8 +81,8 @@ function uc_event_registration_form_alter(&$form, &$form_state, $form_id) {
         if($stock !== FALSE && $stock <= 0) {
           $form['submitted']['#access'] = 0;
           $form['actions']['submit']['#access'] = 0;      
-          //I'd like to give a message, below, but it prints twice.  Anyone? Bueller?
-          //drupal_set_message('Sorry, this event has sold out!');
+          //Tell people the event sold out.  Bummer dude.
+          drupal_set_message('Sorry, this event has sold out!');
         } //stock check
       } //module_exists
     }//webform_client_form

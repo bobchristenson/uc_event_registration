@@ -4,8 +4,7 @@
  * This file handles all the conditional actions stuff
  *
  */
- 
- 
+
 /**
  * Implementation of hook_ca_predicate().
  *

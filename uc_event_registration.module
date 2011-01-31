@@ -59,7 +59,7 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
       //remove the submit button because webform does the submitting
       unset($form['submit']);
       //remove attributes since no one should ever see them
-     // unset($form['attributes']); 
+     unset($form['attributes']); 
 
                    
     }//add to cart form
@@ -122,9 +122,6 @@ function uc_event_registration_client_submit(&$form, $form_state) {
   $sid = $form_state['values']['details']['sid'];
   
   $data['submission_id'] = $sid;
-  // add uc attributes here 
-  //if you can figure out how to get them
-  // $data['attributes'] = array($aid => $oid);
   
   //add it to the cart
   uc_cart_add_item($node->nid, $quantity, $data);

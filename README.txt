@@ -8,10 +8,7 @@ The main goal here is to glue together completely stock Ubercart and Webform mod
 
 
 ---Installation---
-To install the module, make sure you have all required modules in the install.  Then, simply enable the uc_event_registration module found under the 'Ubercart - Extras' package.  This will automatically enable all required modules and the accompanying feature.
-
----Note on Content Types---
-This module will create a new content type (or Ubercart class) with the machine name of "paidevent".  Before installation you should check your existing content types to make sure this will not conflict with anything already by that name.
+To install the module, make sure you have all required modules in the install.  Then, simply enable the uc_event_registration module found under the Ubercart package.  This will automatically enable all required modules and the accompanying feature.
 
 
 
@@ -20,16 +17,17 @@ There are no configuration screens for this module.  To create a paid event with
 
 --Configure Ubercart with a payment method and all other necessary Ubercart stuff, as normal.
 --Create a "Paid Event" node (this content type was created upon installation)
---This event will automatically have a webform attached (look for the webform tab) with 2 default fields.  Never delete these fields as they're required to make this recipe work.
+--This event will automatically have a webform attached (look for the webform tab) with 2 default fields.  <strong>Never delete these fields</strong> as they're required to make this recipe work.
 --Add any additional fields you'd like to collect in the webform.  These additional fields are purely informational and are not (yet!) integrated into checkout
 --Jump up and down with excitement because people can now pay to register for that event
---After some registrations, look at the event's webform results.  You'll see all registrations there along with whether they've been paid for or not. (Ubercart automatically marks webform submissions as 'paid' after checkout is completed)
+--After some registrations, look at the event's webform results.  You'll see all registrations there along with whether they've been paid for or not.  <em>(Ubercart automatically marks webform submissions as 'paid' after checkout is completed)</em></ol>
 
 
 
 ---Current Requirements, Limitations, and Upcoming Features---
 --Webform 6.x-3.6 or higher and Ubercart 6.x-2.x are required.
 --Currently we are taking only simple registrations.  If you try to use any price altering functionality (discounts, price modifications, etc) in Ubercart, they won't work with this feature.  This is a to-do for future releases
+</ul>
 
 
 

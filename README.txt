@@ -8,7 +8,7 @@ The main goal here is to glue together completely stock Ubercart and Webform mod
 
 
 ---Installation---
-To install the module, make sure you have all required modules in the install.  Then, simply enable the uc_event_registration module found under the Ubercart package.  This will automatically enable all required modules and the accompanying feature.  Note that during installation it creates a new Ubercart product class called "paidevent".  You should check your existing content types before enabling this module to make sure this doesn't conflict with any existing type names.
+To install the module, make sure you have all required modules in the install.  Then, simply enable the uc_event_registration module found under the Ubercart package.  This will automatically enable all required modules and the accompanying feature.
 
 
 

@@ -1,5 +1,5 @@
 <?php
-// $Id$
+// $Id: uc_event_registration.module,v 1.4 2011/01/27 13:48:51 bobchristenson Exp $
 
 require_once('uc_event_registration_ca.inc');
 
@@ -12,63 +12,45 @@ function uc_event_registration_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     case 'presave':
     case 'insert':
       if (!$node->nid && $node->type == 'paidevent') {
-      // If we used clone.module to get here then $node->webform['components']
-      // already has valid data (including, presumably, quantity and status).
-
-      if (!uc_event_registration_has_form_component('uc_event_payment_status', $node->webform['components'])) {
-        array_unshift($node->webforms['components'], array(
+        $node->webform['components'] = array(
+          1 => array(
+            'nid' => $node->nid,
+            'cid' => 1,
+            'form_key' => 'quantity',
+            'name' => 'Quantity',
+            'type' => 'textfield',
+            'value' => 1,
+            'mandatory' => 1,
+          ), //end 1        
+        
+        2 => array(
           'nid' => $node->nid,
           'cid' => 2,
-          'form_key' => 'uc_event_payment_status',
+          'form_key' => 'payment_status',
           'name' => 'Payment Status',
           'type' => 'select',
           'value' => 'unpaid',    
           'extra' => array(
             'items' => 'paid|Paid
 unpaid|Unpaid',
-            'multiple' => 0,
+            'multiple' => 0,    
           ),  //extra
           'mandatory' => 1,
-        )); //end 2
-      }
-
-      if (!uc_event_registration_has_form_component('uc_event_quantity', $node->webform['components'])) {
-        array_unshift($node->webform['components'], array(
-          'nid' => $node->nid,
-          'cid' => 1,
-          'form_key' => 'uc_event_quantity',
-          'name' => 'Quantity',
-          'type' => 'textfield',
-          'value' => 1,
-          'mandatory' => 1,
-        )); //end 1        
-      }
-    }
-
+          ), //end 2
+        ); //end node->webform
     break;
+    }; //end if
     case 'update':
     case 'view':
 
   } //endswitch 
 } //endfunction
 
-/**
- * Determines if the needle component exists in the components array.
- * @param $needle The webforms form_key to search for
- * @param $haystack The components array to search through
- */
-function uc_event_registration_has_form_component($needle, $haystack) {
-  foreach ($haystack as $key => $value) {
-    if (is_array($value) && $value['form_key'] === $needle)
-      return TRUE;
-  }
-  return FALSE;
-}
 
 /*
 * Implementation of hook_form_alter
 */
-function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
+function uc_event_registration_form_alter(&$form, &$form_state, $form_id) {
   //Check if it's a paid event form
   //first check is add to cart, second is webform
   if($form['node']['#value']->type == 'paidevent' || $form['#node']->type == 'paidevent') { 
@@ -77,20 +59,21 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
       //remove the submit button because webform does the submitting
       unset($form['submit']);
       //remove attributes since no one should ever see them
-     unset($form['attributes']); 
-
-                   
+      unset($form['attributes']);        
     }//add to cart form
 
     //target the included webform
     if (substr($form_id, 0, 20) == 'webform_client_form_') {
       //Hide the Payment Status for everyone.
       //Admins can still see the result in the webform results.
-      $form['submitted']['uc_event_payment_status']['#access'] = 0;     
+      $form['submitted']['payment_status']['#access'] = 0;     
       // Add the submit handler after the existing Webform submit handler
       $form['#submit'][] = 'uc_event_registration_client_submit';
       //add validation to be used on quantity field
-      $form['#validate'][] = 'uc_event_registration_validate_number';        
+      $form['#validate'][] = 'uc_event_registration_validate_number';      
+      
+
+            
 
       //if the stock module is enabled and stock is zero, turn off the webform
       if(module_exists('uc_stock')) {
@@ -98,8 +81,8 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
         if($stock !== FALSE && $stock <= 0) {
           $form['submitted']['#access'] = 0;
           $form['actions']['submit']['#access'] = 0;      
-          //Tell people theyre outta luck
-          drupal_set_message('Sorry, this event has sold out!');
+          //I'd like to give a message, below, but it prints twice.  Anyone? Bueller?
+          //drupal_set_message('Sorry, this event has sold out!');
         } //stock check
       } //module_exists
     }//webform_client_form
@@ -111,16 +94,14 @@ function uc_event_registration_form_alter(&$form, $form_state, $form_id) {
   * Element Validator for Quantity, making sure it's a numeric entry
   */
 function uc_event_registration_validate_number($form_values) {
-  $value = $form_values['submitted']['uc_event_quantity']['#value'];
+  $value = $form_values['submitted']['quantity']['#value'];
   if (!is_numeric($value) || ($value <= 0)) {
-    form_set_error('uc_event_quantity', t('You have not entered a valid quantity.'));
+    form_set_error('quantity', t('You have not entered a valid quantity.'));
   }//end numeric check
-  
-  //validate that theres stock if using it
   if(module_exists('uc_stock')) {
     $stock = uc_stock_level($form_values['#node']->model);
     if($stock !== FALSE && $stock < $value) {
-      form_set_error('uc_event_quantity', t('Sorry, but your quantity chosen exceeds the remaining number of tickets.  There are currently @stock tickets remaining. Please try purchasing fewer.', array('@stock' => $stock)), $reset = FALSE);      
+      form_set_error('quantity', t('Sorry, but your quantity chosen exceeds the remaining number of tickets.  There are currently @stock tickets remaining. Please try purchasing fewer.', array('@stock' => $stock)), $reset = FALSE);      
     }//stock_level
   }//module_exists
 }//end validation
@@ -128,21 +109,26 @@ function uc_event_registration_validate_number($form_values) {
 /**
   * Submit handler for event registration webforms
   */
-function uc_event_registration_client_submit(&$form, $form_state) {
+function uc_event_registration_client_submit(&$form, &$form_state) {
     
-  //get the node
-  $node = $form['#node'];
+  //load the webform node
+  $node = node_load(arg(1));
     
   //get the quantity of registrations they want from the webform
-  $quantity = $form_state['values']['submitted_tree']['uc_event_quantity'];
+  $quantity = $form_state['values']['submitted_tree']['quantity'];
+    
+  //add quantity of registrations to cart based on
+  //node ref and webform quantity with sid as attribute
   
-  //create the attributes array
-  $sid = $form_state['values']['details']['sid'];
-  
-  $data['submission_id'] = $sid;
-  
+  //define the attribute to modify
+  $att_title = 'submission_id';
+  //use SID as the attribute so we can grab it later and mark webform as complete
+  $att_name = $form_state['values']['details']['sid'];
+  //create attributes array
+  $attributes = array( 'attributes' => array( $att_title => $att_name  ) );
+     
   //add it to the cart
-  uc_cart_add_item($node->nid, $quantity, $data);
+  uc_cart_add_item($node->nid, $quantity, $attributes);
   
   //redirect to checkout
   $form_state['redirect'] = 'cart/checkout';

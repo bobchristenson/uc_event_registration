@@ -35,3 +35,13 @@ function uc_event_setup() {
   // Make the content type non-shippable.
   variable_set('uc_product_shippable_event', 0);
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function uc_event_registration_update_6000() {
+  $res = array();
+  $res[] = update_sql("UPDATE {webform_component} w INNER JOIN {node} n ON w.nid = n.nid SET w.form_key = 'uc_event_quantity' WHERE n.type = 'paidevent' AND w.form_key = 'quantity';");
+  $res[] = update_sql("UPDATE {webform_component} w INNER JOIN {node} n ON w.nid = n.nid SET w.form_key = 'uc_event_payment_status' WHERE n.type = 'paidevent' AND w.form_key = 'payment_status';");
+  return $res;
+}
